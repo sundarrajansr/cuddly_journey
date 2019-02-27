@@ -1,5 +1,5 @@
 // bubble sort demo
-
+package cuddly_journey;
 class BubbleSort {
     public static void main(String args[]) throws Exception {
         int[] arr = { 5, 6, 9, 1, 2, 3, 10, 12, 14, 7 };
