@@ -12,8 +12,14 @@ public class BinarySearchTree<Q> {
 		height = 0;
 	}
 
-	public void insert(Q val) {
-
+	public boolean insert(Q val) {
+		Node<Q> new_node = new Node<Q> (val);
+		if (root==null)
+		{
+			root = new_node;
+			return true;
+		}
+		return false;
 	}
 
 	public void find(Q val) {
@@ -40,6 +46,11 @@ public class BinarySearchTree<Q> {
 			left = null;
 			right = null;
 			parent = null;
+		}
+		
+		public Node(T val) {
+			this();
+			this.val = val;
 		}
 
 		public void setLeft(Node<T> obj) {
