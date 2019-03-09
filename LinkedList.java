@@ -63,31 +63,33 @@ public class LinkedList<T> {
 		System.out.println("Mid : " + lstInt.getMid().val());
 
 	}
+	
+	class Node<T> {
+		T val;
+		Node<T> next;
+
+		public Node(T obj) {
+			val = obj;
+			next = null;
+		}
+
+		public void setNext(Node<T> obj) {
+			this.next = obj;
+		}
+
+		public Node<T> getNext() {
+			return this.next;
+		}
+
+		public void setVal(T newobj) {
+			this.val = newobj;
+		}
+
+		public T val() {
+			return val;
+		}
+	}
 
 }
 
-class Node<T> {
-	T val;
-	Node<T> next;
 
-	public Node(T obj) {
-		val = obj;
-		next = null;
-	}
-
-	public void setNext(Node<T> obj) {
-		this.next = obj;
-	}
-
-	public Node<T> getNext() {
-		return this.next;
-	}
-
-	public void setVal(T newobj) {
-		this.val = newobj;
-	}
-
-	public T val() {
-		return val;
-	}
-}
