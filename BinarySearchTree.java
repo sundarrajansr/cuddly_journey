@@ -1,4 +1,20 @@
 package cuddly_journey;
+/*
+ * todo
+ * 
+ * find the height
+ * find the vertical traversal
+ * print the tree in tree structure level by level
+ * find successor , predecessor
+ * support deletion
+ * validate bst
+ * order traversal with callback
+ * support balancing with AVL
+ * support balancing with red-black
+ * treap
+ * 
+ */
+
 
 public class BinarySearchTree<Q extends Comparable<Q>> {
 
@@ -12,11 +28,14 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
 		height = 0;
 	}
 
-	public boolean insert(Q val) {
+	public BinarySearchTree<Q> insert(Q val) {
+
 		Node<Q> new_node = new Node<Q>(val);
+
+		// if Tree is Empty
 		if (root == null) {
 			root = new_node;
-			return true;
+			return this;
 		}
 
 		Node<Q> cnode = root;
@@ -28,13 +47,13 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
 				cnode = cnode.left();
 				if (cnode == null) {
 					parent.setLeft(new_node);
-					return true;
+					return this;
 				}
 			} else if (compare > 0) {
 				cnode = cnode.right();
 				if (cnode == null) {
 					parent.setRight(new_node);
-					return true;
+					return this;
 				}
 			}
 		}
@@ -57,7 +76,49 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
 
 	}
 
-	public void find(Q val) {
+	public Q find(Q val) {
+		
+		Node<Q> pointer = root;
+		while (pointer!=null)
+		{
+			int diff = pointer.val().compareTo(val);
+			if(diff==0) {
+				return pointer.val();
+			}else if (diff <0)
+			{
+				pointer = pointer.right();
+			}
+			else
+			{
+				pointer =pointer.left();
+			}
+		}
+		return null;
+
+	}
+
+	public int width() {
+		int left_width = 0;
+		int right_width = 0;
+		if (root == null)
+			return 0;
+		Node<Q> cnode = root;
+		while (cnode.left() != null) {
+			cnode = cnode.left();
+			left_width++;
+		}
+		cnode = root;
+		while (cnode.right() != null) {
+			cnode = cnode.right();
+			right_width++;
+		}
+		return left_width + right_width;
+
+	}
+
+	public int height() {
+
+		return height;
 
 	}
 
@@ -119,12 +180,12 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
 	// Unit test purpose
 	public static void main(String[] args) {
 		BinarySearchTree<Integer> bst = new BinarySearchTree<Integer>();
-		bst.insert(5);
-		bst.insert(25);
-		bst.insert(15);
-		bst.insert(10);
-		bst.insert(35);
+		bst.insert(5).insert(3).insert(2).insert(1).insert(4).insert(10).insert(15).insert(12);
 		bst.print();
+		System.out.println(bst.find(3));
+		System.out.println(bst.find(22));
+		System.out.println(bst.find(12));
+		System.out.println("width" + bst.width());
 	}
 
 }
