@@ -1,8 +1,18 @@
 package cuddly_journey;
+
+import java.util.NoSuchElementException;
+
+/*
+ * change log
+ * -------------------------------
+ * 18-Mar-2019 Initial implementation
+ * 23-Mar-2019 bst operations - insert, find, height
+ * 
+ * -------------------------------
+ */
 /*
  * todo
  * 
- * find the height
  * find the vertical traversal
  * print the tree in tree structure level by level
  * find successor , predecessor
@@ -14,7 +24,6 @@ package cuddly_journey;
  * treap
  * 
  */
-
 
 public class BinarySearchTree<Q extends Comparable<Q>> {
 
@@ -29,15 +38,12 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
 	}
 
 	public BinarySearchTree<Q> insert(Q val) {
-
 		Node<Q> new_node = new Node<Q>(val);
-
 		// if Tree is Empty
 		if (root == null) {
 			root = new_node;
 			return this;
 		}
-
 		Node<Q> cnode = root;
 		Node<Q> parent = null;
 		while (true) {
@@ -47,12 +53,14 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
 				cnode = cnode.left();
 				if (cnode == null) {
 					parent.setLeft(new_node);
+					new_node.setParent(parent);
 					return this;
 				}
 			} else if (compare > 0) {
 				cnode = cnode.right();
 				if (cnode == null) {
 					parent.setRight(new_node);
+					new_node.setParent(parent);
 					return this;
 				}
 			}
@@ -67,8 +75,9 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
 	}
 
 	private void printAllNodes(Node<Q> node) {
-		System.out.printf("Node : %s, Left : %s, Right : %s\n", node.val(),
-				node.left() == null ? "null" : node.left().val(), node.right() == null ? "null" : node.right().val());
+		System.out.printf("Node : %s, Left : %s, Right : %s Parent : %s\n", node.val(),
+				node.left() == null ? "null" : node.left().val(), node.right() == null ? "null" : node.right().val(),
+				node.parent() == null ? "null" : node.parent().val());
 		if (node.left() != null)
 			printAllNodes(node.left());
 		if (node.right() != null)
@@ -76,21 +85,17 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
 
 	}
 
-	public Q find(Q val) {
-		
+	public Node<Q> find(Q val) {
+
 		Node<Q> pointer = root;
-		while (pointer!=null)
-		{
+		while (pointer != null) {
 			int diff = pointer.val().compareTo(val);
-			if(diff==0) {
-				return pointer.val();
-			}else if (diff <0)
-			{
+			if (diff == 0) {
+				return pointer;
+			} else if (diff < 0) {
 				pointer = pointer.right();
-			}
-			else
-			{
-				pointer =pointer.left();
+			} else {
+				pointer = pointer.left();
 			}
 		}
 		return null;
@@ -118,11 +123,70 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
 
 	public int height() {
 
+		height = heightUtil(root);
 		return height;
 
 	}
 
+	private int heightUtil(Node<Q> node) {
+		if (node == null)
+			return -1;
+		else
+			return (1 + Math.max(heightUtil(node.left()), heightUtil(node.right())));
+
+	}
+
+	public Node<Q> maximum(Node<Q> q) {
+		while (q.right() != null) {
+			q = q.right();
+		}
+		return q;
+	}
+
+	public Node<Q> minimum(Node<Q> q) {
+		while (q.left() != null) {
+			q = q.left();
+		}
+		return q;
+	}
+
+	public Node<Q> successor(Q val) {
+		Node<Q> curnode = this.find(val);
+		if (curnode == null)
+			throw new NoSuchElementException();
+		if (curnode.right() != null) {
+			return (minimum(curnode.right()));
+		} else {
+			Node<Q> p = curnode.parent();
+			while (p != null && p == curnode.right()) {
+				curnode = p;
+				p = p.parent();
+			}
+			return p;
+		}
+	}
+
+	public Node<Q> predecessor(Q val) {
+		Node<Q> curnode = this.find(val);
+		if (curnode == null)
+			throw new NoSuchElementException();
+		if (curnode.left() != null) {
+			return (maximum(curnode.left()));
+		} else {
+			Node<Q> p = curnode.parent();
+			while (p != null && p == curnode.left()) {
+				curnode = p;
+				p = p.parent();
+			}
+			return p;
+		}
+	}
+
 	public void delete(Q val) {
+
+		Node<Q> del_node = this.find(val);
+		if (del_node == null)
+			throw new NoSuchElementException();
 
 	}
 
@@ -137,6 +201,10 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
 			left = null;
 			right = null;
 			parent = null;
+		}
+
+		public String toString() {
+			return "Node : " + val.toString();
 		}
 
 		public Node(T val) {
@@ -178,14 +246,23 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
 	}
 
 	// Unit test purpose
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
+
 		BinarySearchTree<Integer> bst = new BinarySearchTree<Integer>();
-		bst.insert(5).insert(3).insert(2).insert(1).insert(4).insert(10).insert(15).insert(12);
+
+		bst.insert(5).insert(3).insert(2).insert(1).insert(4).insert(10).insert(15).insert(12).insert(14);
 		bst.print();
+
 		System.out.println(bst.find(3));
 		System.out.println(bst.find(22));
 		System.out.println(bst.find(12));
 		System.out.println("width" + bst.width());
+		System.out.println("height" + bst.height());
+		System.out.println("pred of 5 is "+ bst.predecessor(5));
+		System.out.println("pred of 12 is "+ bst.predecessor(12));
+		System.out.println("suc of 3 is "+bst.successor(3));
+		System.out.println("suc of 14 is "+bst.successor(14));
+		System.out.println("suc of 15 is "+bst.successor(15));
 	}
 
 }
