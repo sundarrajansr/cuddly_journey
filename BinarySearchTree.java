@@ -17,13 +17,75 @@ import java.util.NoSuchElementException;
  * width() needs to be fixed find the vertical traversal
  * validate bst
  * print the tree in tree structure level by level
+ * build tree from inorder
+ * build tree from pre order
+ * build tree from post order 
  * support deletion 
  * Merge two trees validate
  * bst order traversal with callback support
- * balancing with AVL support balancing with red-black treap
+ * balancing with AVL support
+ * balancing with red-black treap
+ * 
  * 
  */
+class Node<T> {
+  T val;
+  private Node<T> left;
+  private Node<T> right;
+  private Node<T> parent;
 
+  public Node() {
+    val = null;
+    left = null;
+    right = null;
+    parent = null;
+  }
+
+  public String toString() {
+    return "Node : " + val.toString();
+  }
+
+  public Node(T val) {
+    this();
+    this.val = val;
+  }
+
+  public void setLeft(Node<T> obj) {
+    this.left = obj;
+    if (obj!=null)
+      obj.parent = this;
+  }
+
+  public void setRight(Node<T> obj) {
+    this.right = obj;
+    if (obj!=null)
+      obj.parent = this;
+  }
+
+  public void setParent(Node<T> obj) {
+    this.parent = obj;
+  }
+
+  public Node<T> left() {
+    return this.left;
+  }
+
+  public Node<T> right() {
+    return this.right;
+  }
+
+  public Node<T> parent() {
+    return this.parent;
+  }
+
+  public void setVal(T newobj) {
+    this.val = newobj;
+  }
+
+  public T val() {
+    return val;
+  }
+}
 public class BinarySearchTree<Q extends Comparable<Q>> {
 
   Node<Q> root = null;
@@ -38,6 +100,7 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
 
   public BinarySearchTree<Q> insert(Q val) {
     Node<Q> new_node = new Node<Q>(val);
+    no_of_nodes++;
     // if Tree is Empty
     if (root == null) {
       root = new_node;
@@ -52,14 +115,12 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
         cnode = cnode.left();
         if (cnode == null) {
           parent.setLeft(new_node);
-          new_node.setParent(parent);
           return this;
         }
       } else if (compare > 0) {
         cnode = cnode.right();
         if (cnode == null) {
           parent.setRight(new_node);
-          new_node.setParent(parent);
           return this;
         }
       }
@@ -85,18 +146,14 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
 
   }
 
-  public Node<Q> find(Q val) {
-
+  public Node<Q> find (Q val) {
     Node<Q> pointer = root;
     while (pointer != null) {
-      int diff = pointer.val().compareTo(val);
-      if (diff == 0) {
-        return pointer;
-      } else if (diff < 0) {
-        pointer = pointer.right();
-      } else {
-        pointer = pointer.left();
-      }
+      int diff = pointer.val ().compareTo (val);
+      if      (diff == 0) return pointer;
+      else 
+          if (diff < 0)  pointer = pointer.right ();
+          else           pointer = pointer.left  ();
     }
     return null;
 
@@ -162,6 +219,7 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
         curnode = p;
         p = p.parent();
       }
+      
       return p;
     }
   }
@@ -182,103 +240,59 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
     }
   }
 
-  public void delete(Q val) {
-
-    Node<Q> del_node = this.find(val);
-    if (del_node == null)
-      throw new NoSuchElementException();
-    /*
-     * deletion:
-     * 
-     * if del_node has no childs , simply remove. if del_node has 1 child, replace the child as the
-     * current node. if del_node has 2 child, find successor or predecessor. if successor i.e left
-     * most of the right subtree ( min of del_node.right) then the successor 'y' will not have a
-     * left , but right sub tree is possible. y should be replaced by y.right if predecessor i.e
-     * right most of the left subtree will not have a right subtree. if it has left subtree , the
-     * predecessor to be replaced by its left sub tree y.left
-     */
-    boolean hasLeft = del_node.left() != null;
-    boolean hasRight = del_node.right() != null;
-    if (!hasLeft && !hasRight) {
-      if (del_node.parent().left() == del_node) {
-        del_node.parent().setLeft(null);
-      } else {
-        del_node.parent().setRight(null);
-      }
-      return;
+  public void delete (Q val) {
+    Node<Q> del_node      = this.find (val);
+    if (del_node == null)   throw new NoSuchElementException ();
+    Node<Q> parOfNodeDelete = del_node.parent ();
+    boolean bIsParentExists = del_node.parent () != null;
+    
+    boolean hasLeft  = del_node.left  () != null;
+    boolean hasRight = del_node.right () != null;
+    
+    if (!hasLeft && !hasRight && bIsParentExists) {
+      if (parOfNodeDelete.left () == del_node)  del_node.parent ().setLeft (null);
+      else                                      del_node.parent ().setRight (null);
+      return; // do nothing
     }
+    
     if (hasLeft ^ hasRight) {
-      Node<Q> nodeParent = del_node.parent();
-      if (hasLeft) {
-        nodeParent.setLeft(del_node.left());
-        del_node.left().setParent(nodeParent);
-      }
-
-      if (hasRight) {
-        nodeParent.setRight(del_node.right());
-        del_node.right().setParent(nodeParent);
-      }
-      return;
+      if (hasLeft)      parOfNodeDelete.setLeft  (del_node.left  ());
+      if (hasRight)     parOfNodeDelete.setRight (del_node.right ());
+      return; // do nothing
     }
-    // at this point , the node to be deleted has both left and right
-    // Update code for deleting nodes with two children
-    return;
 
+    Node<Q> replace_node = successor (del_node.val);
+
+    if (replace_node.parent() != del_node) {
+      // if new node is not immediate child of the delete node
+      // then new node is a left child since we are selecting successor.
+      replace_node.parent ().setLeft (replace_node.right ());
+      replace_node.setRight (del_node.right ());
+    }
+
+    replace_node.setLeft (del_node.left ());
+    
+    if (bIsParentExists)    if (parOfNodeDelete.left () == del_node) parOfNodeDelete.setLeft (replace_node);
+                            else                                     parOfNodeDelete.setRight (replace_node);
+    else {
+      this.root = replace_node;
+      replace_node.setParent (null);
+    }
+  }
+  
+  public static void printVerticalBST ()
+  {
+    
+  }
+  
+  public boolean checkBST(Node root) {
+    int min = Integer.MIN_VALUE;
+    int max = Integer.MAX_VALUE;
+    return validateBST(root, min, max);
   }
 
-  class Node<T> {
-    T val;
-    private Node<T> left;
-    private Node<T> right;
-    private Node<T> parent;
-
-    public Node() {
-      val = null;
-      left = null;
-      right = null;
-      parent = null;
-    }
-
-    public String toString() {
-      return "Node : " + val.toString();
-    }
-
-    public Node(T val) {
-      this();
-      this.val = val;
-    }
-
-    public void setLeft(Node<T> obj) {
-      this.left = obj;
-    }
-
-    public void setRight(Node<T> obj) {
-      this.right = obj;
-    }
-
-    public void setParent(Node<T> obj) {
-      this.parent = obj;
-    }
-
-    public Node<T> left() {
-      return this.left;
-    }
-
-    public Node<T> right() {
-      return this.right;
-    }
-
-    public Node<T> parent() {
-      return this.parent;
-    }
-
-    public void setVal(T newobj) {
-      this.val = newobj;
-    }
-
-    public T val() {
-      return val;
-    }
+  private boolean validateBST(Node root, int min, int max) {
+    return false;
   }
 
   // Unit test purpose
@@ -300,11 +314,8 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
     System.out.println("suc of 3 is " + bst.successor(3));
     System.out.println("suc of 14 is " + bst.successor(14));
     System.out.println("suc of 15 is " + bst.successor(15));
-    bst.delete(14);
-    System.out.println("after deleting 14.");
-    bst.print();
-    bst.delete(2);
-    System.out.println("after deleting 2.");
+    System.out.println("deleting 5");
+    bst.delete(5);
     bst.print();
   }
 
