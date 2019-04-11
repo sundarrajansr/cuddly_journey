@@ -240,18 +240,20 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
     }
   }
 
+  //-- comment refactor this code using 'Transplant' operation. refer CLRS.
   public void delete (Q val) {
+    
     Node<Q> del_node      = this.find (val);
     if (del_node == null)   throw new NoSuchElementException ();
     Node<Q> parOfNodeDelete = del_node.parent ();
-    boolean bIsParentExists = del_node.parent () != null;
     
-    boolean hasLeft  = del_node.left  () != null;
-    boolean hasRight = del_node.right () != null;
+    boolean hasParent = del_node.parent () != null;
+    boolean hasLeft   = del_node.left   () != null;
+    boolean hasRight  = del_node.right  () != null;
     
-    if (!hasLeft && !hasRight && bIsParentExists) {
-      if (parOfNodeDelete.left () == del_node)  del_node.parent ().setLeft (null);
-      else                                      del_node.parent ().setRight (null);
+    if (!hasLeft && !hasRight && hasParent) {
+      if (parOfNodeDelete.left () == del_node)  parOfNodeDelete.setLeft  (null);
+      else                                      parOfNodeDelete.setRight (null);
       return; // do nothing
     }
     
@@ -263,7 +265,7 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
 
     Node<Q> replace_node = successor (del_node.val);
 
-    if (replace_node.parent() != del_node) {
+    if (replace_node.parent () != del_node) {
       // if new node is not immediate child of the delete node
       // then new node is a left child since we are selecting successor.
       replace_node.parent ().setLeft (replace_node.right ());
@@ -271,9 +273,8 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
     }
 
     replace_node.setLeft (del_node.left ());
-    
-    if (bIsParentExists)    if (parOfNodeDelete.left () == del_node) parOfNodeDelete.setLeft (replace_node);
-                            else                                     parOfNodeDelete.setRight (replace_node);
+    if (hasParent)    if (parOfNodeDelete.left () == del_node) parOfNodeDelete.setLeft  (replace_node);
+                      else                                     parOfNodeDelete.setRight (replace_node);
     else {
       this.root = replace_node;
       replace_node.setParent (null);
@@ -285,10 +286,10 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
     
   }
   
-  public boolean checkBST(Node root) {
+  public boolean checkBST (Node root) {
     int min = Integer.MIN_VALUE;
     int max = Integer.MAX_VALUE;
-    return validateBST(root, min, max);
+    return validateBST (root, min, max);
   }
 
   private boolean validateBST(Node root, int min, int max) {
