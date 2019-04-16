@@ -2,25 +2,15 @@ package cuddly_journey;
 
 import java.util.NoSuchElementException;
 
-/*
- * change log 
- * ------------------------------- 
- * 18-Mar-2019 Initial implementation 
- * 23-Mar-2019 bst operations - insert, find, height
- * 23-Mar-2019 fixed successor,predecessor
- * 25-Mar-2019 Add Deletion logic for nodes with 0 or 1 child nodes 
- * -------------------------------
- */
+
 /*
  * todo
  * 
- * width() needs to be fixed find the vertical traversal
  * validate bst
  * print the tree in tree structure level by level
  * build tree from inorder
  * build tree from pre order
  * build tree from post order 
- * support deletion 
  * Merge two trees validate
  * bst order traversal with callback support
  * balancing with AVL support
@@ -179,17 +169,15 @@ public class BinarySearchTree<Q extends Comparable<Q>> {
   }
 
   public int height() {
-
-    height = heightUtil(root);
+    height = heightUtil (root);
     return height;
-
   }
 
-  private int heightUtil(Node<Q> node) {
+  private int heightUtil (Node<Q> node) {
     if (node == null)
       return -1;
     else
-      return (1 + Math.max(heightUtil(node.left()), heightUtil(node.right())));
+      return (1 + Math.max (heightUtil(node.left()), heightUtil(node.right())));
 
   }
 
