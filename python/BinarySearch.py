@@ -11,11 +11,10 @@ def binarySearch(nums, target, start, end):
 
 
 def binarySearchIterative(nums, target, start, end):
-    mid = (start + end) // 2
-    while start < end:
+    while start <= end:
+        mid = (start + end) // 2
         if nums[mid] == target:
             return mid
-        mid = (start + end) // 2
         if nums[mid] > target:
             end = mid - 1
         else:
