@@ -11,10 +11,11 @@ def binarySearch(nums, target, start, end):
 
 
 def binarySearchIterative(nums, target, start, end):
+    mid = (start + end) // 2
     while start < end:
-        mid = (start + end) // 2
         if nums[mid] == target:
             return mid
+        mid = (start + end) // 2
         if nums[mid] > target:
             end = mid - 1
         else:
@@ -26,7 +27,7 @@ def TestBinarySearch():
     search_fns = [binarySearch, binarySearchIterative]
     test_cases = list()
     test_cases.append([[1, 2, 3, 4, 5, 6, 7, 8], 4, 3])
-    test_cases.append([[1, 1, 1, 1, 1, 1, 1, 1], 1, 4])
+    test_cases.append([[1, 1, 1, 1, 1, 1, 1, 1], 1, 3])
     test_cases.append([[1, 9, 10], 12, None])
     test_cases.append([[-1, 0, 1], 1, 2])
     test_cases.append([[-4, -3, -2, -1], -2, 2])
@@ -36,10 +37,11 @@ def TestBinarySearch():
             nums = test_case[0]
             target = test_case[1]
             expected = test_case[2]
-            if expected == fn(nums, target, 0, len(nums) - 1):
-                print(f'PASS :\t {test_case} fn : {fn.__name__}')
+            solution = fn(nums, target, 0, len(nums) - 1)
+            if expected == solution:
+                print(f'PASS :\t {test_case} fn : {fn.__name__} solution : {solution}')
             else:
-                print(f'FAIL :\t {test_case} fn : {fn.__name__}')
+                print(f'FAIL :\t {test_case} fn : {fn.__name__} solution : {solution}')
 
 
 TestBinarySearch()
