@@ -37,10 +37,8 @@ def TestBinarySearch():
             target = test_case[1]
             expected = test_case[2]
             solution = fn(nums, target, 0, len(nums) - 1)
-            if expected == solution:
-                print(f'PASS :\t {test_case} fn : {fn.__name__} solution : {solution}')
-            else:
-                print(f'FAIL :\t {test_case} fn : {fn.__name__} solution : {solution}')
+            test = f':\tfunction :\t {fn.__name__}\t{test_case}\tsolution:\t{solution}'
+            print('PASS' + test if expected == solution else 'FAIL' + test)
 
 
 TestBinarySearch()
