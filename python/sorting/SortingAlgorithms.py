@@ -18,7 +18,7 @@ def exchange(a, b):
 
 def get_arr_val(arr, index):
     if 0 <= index < len(arr):
-        globals()['arr_access'] += 1
+        globals()['arr_access'] = globals()['arr_access'] + 1
         return arr[index]
     else:
         return None
@@ -66,7 +66,7 @@ def TestSort(fn):
 
 
 # nums = [1, 4, 9, 2, 4, 5, -1, 3]
-nums =  [1, 4, 9, 2, 4, 5, -1, 3]
+nums = [1, 4, 9, 2, 4, 5, -1, 3]
 print(nums)
 selection_sort(nums, len(nums))
 print(nums, end='\n\n')
