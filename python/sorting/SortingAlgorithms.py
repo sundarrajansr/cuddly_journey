@@ -21,7 +21,7 @@ def get_arr_val(arr, index):
         globals()['arr_access'] += 1
         return arr[index]
     else:
-        return -1
+        return None
 
 
 def update_arr(arr, index, val):
