@@ -13,7 +13,8 @@ def searchMatrix(matrix, target) -> bool:
 class Solution:
 
     # corner case : arr should not have duplicate keys - is Fixed by using the invariant now :)
-    #
+    # the step where binary search does not find exact match , it will have lesser and larger number in hand
+    # on left and right side of current position of search - Else you already have the right element in hand.
     def binary_search_exact_or_lesser(self, arr, lo, hi, v):
         if lo > hi:
             return arr[max(0,lo-1)]
