@@ -1,28 +1,23 @@
 def quick_sort(nums, lo, hi):
-    if lo >= hi:
+    if lo < hi:
+        q = partition(nums, lo, hi)
+        quick_sort(nums, lo, q - 1)
+        quick_sort(nums, q + 1, hi)
+    else:
         return
-    q = partition(nums, lo, hi)
-    quick_sort(nums, lo, q - 1)
-    quick_sort(nums, q + 1, hi)
 
 
 def partition(nums, lo, hi):
-    if lo >= hi:
-        return
     pivot = nums[hi]
-    i = -1
-    j = hi
-    for k in range(lo, hi - 1):
+    i = lo-1
+    for k in range(lo, hi):
         if nums[k] < pivot:
-            nums[k], nums[i + 1] = nums[i + 1], nums[k]
             i += 1
-        else:
-            nums[k], nums[j - 1] = nums[j - 1], nums[k]
-            j = j - 1
-    nums[i + 1] = pivot
+            nums[k], nums[i] = nums[i], nums[k]
+    nums[i + 1], nums[hi] = pivot, nums[i + 1]
     return i + 1
 
 
-arr = [1,8,2,3,4,10,12,7,6]
-quick_sort(arr,0,len(arr)-1)
+arr = [2,2,2,4,4,6,5,5,7]
+quick_sort(arr, 0, len(arr) - 1)
 print(arr)
