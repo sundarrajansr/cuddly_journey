@@ -56,6 +56,24 @@ def selection_sort(arr: list, n: int) -> list:
     pass
 
 
+def quick_sort(nums, lo, hi):
+    if lo < hi:
+        q = partition(nums, lo, hi)
+        quick_sort(nums, lo, q - 1)
+        quick_sort(nums, q + 1, hi)
+
+
+def partition(nums, lo, hi):
+    pivot = nums[hi]
+    i = lo - 1
+    for k in range(lo, hi):
+        if nums[k] < pivot:
+            i += 1
+            nums[k], nums[i] = nums[i], nums[k]
+    nums[i + 1], nums[hi] = pivot, nums[i + 1]
+    return i + 1
+
+
 def TestSort(fn):
     descending_arr = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
     average_arr = [1, 4, 9, 2, 4, 5, -1, 3]

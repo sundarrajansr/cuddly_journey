@@ -3,8 +3,6 @@ def quick_sort(nums, lo, hi):
         q = partition(nums, lo, hi)
         quick_sort(nums, lo, q - 1)
         quick_sort(nums, q + 1, hi)
-    else:
-        return
 
 
 def partition(nums, lo, hi):
