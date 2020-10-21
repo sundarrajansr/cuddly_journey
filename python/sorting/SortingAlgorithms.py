@@ -11,9 +11,10 @@ def less(a, b):
     return a < b
 
 
-def exchange(a, b):
+def exchange(arr, a, b):
     globals()['swaps'] += 1
-    a, b = b, a
+    globals()['arr_updates'] += 2
+    arr[a], arr[b] = arr[b], arr[a]
 
 
 def get_arr_val(arr, index):
@@ -64,13 +65,13 @@ def quick_sort(nums, lo, hi):
 
 
 def partition(nums, lo, hi):
-    pivot = nums[hi]
+    pivot = get_arr_val(nums, hi)
     i = lo - 1
     for k in range(lo, hi):
-        if nums[k] < pivot:
+        if less(get_arr_val(nums, k), pivot):
             i += 1
-            nums[k], nums[i] = nums[i], nums[k]
-    nums[i + 1], nums[hi] = pivot, nums[i + 1]
+            exchange(nums, i, k)
+    exchange(nums, i + 1, hi)
     return i + 1
 
 
@@ -86,8 +87,8 @@ def TestSort(fn):
 # nums = [1, 4, 9, 2, 4, 5, -1, 3]
 nums = [1, 4, 9, 2, 4, 5, -1, 3]
 print(nums)
-selection_sort(nums, len(nums))
+quick_sort(nums, 0, len(nums) - 1)
 print(nums, end='\n\n')
 result = [['arr length', len(nums)], ['compare ops', compares], ['read ops', arr_access],
           ['write ops', arr_updates + swaps]]
-print(tabulate(result, headers=['sort attributes', 'insertion sort']))
+print(tabulate(result, headers=['sort attributes', 'quick sort']))
