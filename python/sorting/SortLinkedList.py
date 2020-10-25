@@ -11,9 +11,13 @@ class ListNode:
 
 class Solution:
     def sortList(self, head: ListNode) -> ListNode:
-        pass
-
-    def partition(self, start, end):
+        if head is None or head.next is None:
+            return head
+        middle = self.mid(head)
+        left = head
+        right = middle.next if middle.next else middle
+        middle.next = None
+        return self.merge(self.sortList(left), self.sortList(right))
         pass
 
     # left and right are already sorted lists
@@ -33,11 +37,12 @@ class Solution:
         return root.next
 
     def mid(self, head):
+        if not head or not head.next:
+            return head
         slow = head
         fast = head
-        while fast:
-            if fast.next:
-                fast = fast.next
+        while fast and fast.next:
+            fast = fast.next.next
             slow = slow.next
         return slow
 
@@ -50,6 +55,10 @@ for x in arr:
     cur = cur.next
 head = head.next
 cur = head
+
+s = Solution()
+result = s.sortList(head)
+cur = result
 while cur:
     print(cur.val, ' ')
     cur = cur.next
