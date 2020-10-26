@@ -11,14 +11,22 @@ class ListNode:
 
 class Solution:
     def sortList(self, head: ListNode) -> ListNode:
-        if head is None or head.next is None:
+        if head is None or head.next is None: # base case of list with 1 element or no element
             return head
-        middle = self.mid(head)
-        left = head
-        right = middle.next if middle.next else middle
-        middle.next = None
+        left = None
+        right = None
+        if head.next.next is None: # base case of list with 2 elements
+            left = head
+            right = head.next
+            head.next = None
+            right.next = None
+        else:
+            middle = self.mid(head)
+            left = head
+            right = middle.next
+            middle.next = None # unlike array , linked list allows the cut the lists where ever needed.
+            # In array , while sorting we need p and r limit for sorting , in linked list end can be nullified.
         return self.merge(self.sortList(left), self.sortList(right))
-        pass
 
     # left and right are already sorted lists
     # merge return a single list with left and right
@@ -28,16 +36,18 @@ class Solution:
         while left or right:
             l = left.val if left else sys.maxsize
             r = right.val if right else sys.maxsize
-            cur.next = ListNode(min(l, r))
-            cur = cur.next
-            if left:
+            if l < r:
+                cur.next = ListNode(l)
+                cur = cur.next
                 left = left.next
-            if right:
+            else:
+                cur.next = ListNode(r)
+                cur = cur.next
                 right = right.next
         return root.next
 
     def mid(self, head):
-        if not head or not head.next:
+        if head is None or head.next is None:
             return head
         slow = head
         fast = head
@@ -60,5 +70,5 @@ s = Solution()
 result = s.sortList(head)
 cur = result
 while cur:
-    print(cur.val, ' ')
+    print(cur.val, end=' -> ')
     cur = cur.next
