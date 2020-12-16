@@ -9,17 +9,17 @@ class BubbleSort {
     }
 
     public static void bubblesort(int[] arr) {
-        boolean bSwapped = false;
+        boolean swapped = false;
         do {
-            bSwapped = false;
+            swapped = false;
             for (int i = 1; i < arr.length; i++) {
                 if (arr[i - 1] > arr[i]) {
                     exchange(arr, i - 1, i);
-                    bSwapped = true;
+                    swapped = true;
                 }
             }
 
-        } while (bSwapped);
+        } while (swapped);
 
     }
 
