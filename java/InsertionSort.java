@@ -2,7 +2,7 @@
 
 // short note about insertion sort
 /*
-    author: sundar
+    author: sundar rajan
 
     array with size 1 is already sorted.
     keep growing the size of the array , by finding the position for next element.
